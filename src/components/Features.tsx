@@ -27,11 +27,11 @@ export const Features = () => {
   return (
     <section className="py-24 px-4">
       <div className="container mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-bold">
-            Everything you need to <span className="gradient-text">stand out</span>
+        <div className="mb-16 space-y-4">
+          <h2 className="text-4xl md:text-5xl font-bold font-inter">
+            Everything you need to stand out
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl">
             Powerful features designed to help you create the perfect resume
           </p>
         </div>
@@ -40,10 +40,10 @@ export const Features = () => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="glass rounded-2xl p-8 hover:scale-105 transition-transform duration-300 group"
+              className="border border-border rounded-lg p-8 hover:border-primary/50 transition-colors duration-300 group"
             >
-              <div className="mb-4 w-12 h-12 rounded-lg gradient-bg flex items-center justify-center group-hover:scale-110 transition-transform">
-                <feature.icon className="w-6 h-6 text-white" />
+              <div className="mb-4 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <feature.icon className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>

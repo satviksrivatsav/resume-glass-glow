@@ -3,27 +3,26 @@ import { ArrowRight } from "lucide-react";
 
 export const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4">
-      {/* Animated gradient background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 -left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute top-1/4 -right-1/4 w-96 h-96 bg-secondary/30 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-accent/30 rounded-full blur-3xl animate-pulse delay-2000" />
-      </div>
-
-      <div className="container mx-auto max-w-5xl">
-        {/* Center content */}
-        <div className="space-y-8 text-center">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold leading-tight font-inter tracking-tight">
-            Build your resume in{" "}
-            <span className="gradient-text">minutes</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-            Create a stunning, professional resume that gets you hired. Simple, fast, and ATS-friendly.
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 pt-20">
+      <div className="container mx-auto max-w-6xl">
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <p className="text-sm font-medium text-muted-foreground tracking-[0.2em] uppercase">
+              More than a resume builder
+            </p>
+            <h1 className="text-6xl md:text-7xl lg:text-[7rem] font-bold leading-[1.1] font-inter tracking-tight">
+              Your resume should do more than look good
+            </h1>
+          </div>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl leading-relaxed">
+            As the first-ever AI-powered resume platform, Resume Flow lets job seekers create, manage, and optimize resumes that get results.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button variant="gradient" size="lg" className="text-lg h-14 px-8">
-              Build your resume now
+          <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <Button variant="default" size="lg" className="text-base h-12 px-6">
+              Start building
+            </Button>
+            <Button variant="ghost" size="lg" className="text-base h-12 px-6">
+              Contact sales
               <ArrowRight className="ml-2" />
             </Button>
           </div>
