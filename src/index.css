@@ -38,10 +38,11 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
     
-    /* Gradient colors */
-    --gradient-start: 221 83% 53%;
-    --gradient-mid: 221 83% 53%;
-    --gradient-end: 221 83% 53%;
+    /* Gradient colors - vibrant multi-color gradient */
+    --gradient-start: 230 80% 40%;     /* Deep blue */
+    --gradient-mid: 280 70% 50%;       /* Purple/Magenta */
+    --gradient-end: 170 70% 50%;       /* Cyan/Turquoise */
+    --gradient-accent: 150 80% 55%;    /* Green accent */
     
     /* Glass effect */
     --glass-bg: 0 0% 10% / 0.5;
