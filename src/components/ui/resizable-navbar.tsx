@@ -231,14 +231,14 @@ export const MobileNavToggle = ({
 
 export const NavbarLogo = () => {
   return (
-    <a href="#" className="relative z-20 flex items-center space-x-2">
+    <a href="#" className="relative z-20 flex items-center space-x-5">
       <img
         src={logo}
         alt="logo"
-        width="40"
-        height="40"
+        width="50"
+        height="50"
       />
-      <span className="font-semibold text-xl text-white">Resume Flow</span>
+      <span className="font-bold text-3xl text-white">Resume Flow</span>
     </a>
   );
 };

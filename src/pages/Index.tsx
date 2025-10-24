@@ -1,4 +1,4 @@
-import { Hero } from "@/components/Hero";
+import LandingPage from "@/components/landing-page";
 import {
   Navbar,
   NavBody,
@@ -32,7 +32,7 @@ const Index = () => {
 
   return (
     <main className="min-h-screen">
-      <Navbar>
+      <Navbar className="top-10">
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
@@ -66,7 +66,7 @@ const Index = () => {
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
-      <Hero />
+      <LandingPage />
     </main>
   );
 };
