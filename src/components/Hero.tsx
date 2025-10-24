@@ -3,30 +3,35 @@ import { ArrowRight } from "lucide-react";
 
 export const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 pt-20 bg-gradient-to-br from-[hsl(var(--gradient-start))] via-[hsl(var(--gradient-mid))] to-[hsl(var(--gradient-end))]">
-      <div className="absolute inset-0 bg-gradient-to-tr from-[hsl(var(--gradient-accent))]/20 via-transparent to-[hsl(var(--gradient-mid))]/30 blur-3xl" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,hsl(var(--gradient-end))/30,transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,hsl(var(--gradient-mid))/40,transparent_50%)]" />
+    <section 
+      className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 pt-20"
+      style={{
+        backgroundImage: "url(/src/assets/hg.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="absolute inset-0 bg-black/50" />
       <div className="container mx-auto max-w-6xl relative z-10">
-        <div className="space-y-8">
-          <div className="space-y-4">
-            <p className="text-sm font-medium text-muted-foreground tracking-[0.2em] uppercase">
+        <div className="space-y-6">
+          <div className="space-y-2 text-center">
+            <p className="text-sm font-semibold text-gray-200 tracking-widest uppercase">
               More than a resume builder
             </p>
-            <h1 className="text-6xl md:text-7xl lg:text-[7rem] font-bold leading-[1.1] font-inter tracking-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight font-inter tracking-tighter">
               Your resume should do more than look good
             </h1>
           </div>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-300 font-medium max-w-3xl mx-auto text-center leading-relaxed">
             As the first-ever AI-powered resume platform, Resume Flow lets job seekers create, manage, and optimize resumes that get results.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <Button variant="default" size="lg" className="text-base h-12 px-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <Button size="lg" className="text-base h-12 px-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg hover:scale-105 transform transition-transform duration-200">
               Start building
             </Button>
-            <Button variant="ghost" size="lg" className="text-base h-12 px-6">
-              Contact sales
-              <ArrowRight className="ml-2" />
+            <Button variant="outline" size="lg" className="text-base h-12 px-8 bg-transparent border-2 border-white text-white hover:bg-white/10">
+              Create from existing Resume
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </div>

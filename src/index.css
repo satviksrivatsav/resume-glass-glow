@@ -39,10 +39,10 @@ All colors MUST be HSL.
     --radius: 0.5rem;
     
     /* Gradient colors - vibrant multi-color gradient */
-    --gradient-start: 230 80% 40%;     /* Deep blue */
-    --gradient-mid: 280 70% 50%;       /* Purple/Magenta */
-    --gradient-end: 170 70% 50%;       /* Cyan/Turquoise */
-    --gradient-accent: 150 80% 55%;    /* Green accent */
+    --gradient-start: 240 67% 11%;     /* Very Dark Blue */
+    --gradient-mid: 285 87% 53%;       /* Vibrant Purple/Magenta */
+    --gradient-end: 175 100% 50%;      /* Bright Cyan/Turquoise */
+    --gradient-accent: 145 100% 50%;   /* Bright Green */
     
     /* Glass effect */
     --glass-bg: 0 0% 10% / 0.5;
