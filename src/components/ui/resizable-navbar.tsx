@@ -222,10 +222,46 @@ export const MobileNavToggle = ({
   isOpen: boolean;
   onClick: () => void;
 }) => {
-  return isOpen ? (
-    <IconX className="text-white dark:text-white" onClick={onClick} />
-  ) : (
-    <IconMenu2 className="text-white dark:text-white" onClick={onClick} />
+  return (
+    <button
+      onClick={onClick}
+      className="relative h-6 w-6 flex flex-col justify-center items-center gap-1.5 cursor-pointer z-50"
+      aria-label={isOpen ? "Close menu" : "Open menu"}
+    >
+      <motion.span
+        animate={{
+          rotate: isOpen ? 45 : 0,
+          y: isOpen ? 8 : 0,
+        }}
+        transition={{
+          duration: 0.3,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        className="w-6 h-0.5 bg-white rounded-full origin-center"
+      />
+      <motion.span
+        animate={{
+          opacity: isOpen ? 0 : 1,
+          x: isOpen ? -20 : 0,
+        }}
+        transition={{
+          duration: 0.2,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        className="w-6 h-0.5 bg-white rounded-full"
+      />
+      <motion.span
+        animate={{
+          rotate: isOpen ? -45 : 0,
+          y: isOpen ? -8 : 0,
+        }}
+        transition={{
+          duration: 0.3,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        className="w-6 h-0.5 bg-white rounded-full origin-center"
+      />
+    </button>
   );
 };
 
