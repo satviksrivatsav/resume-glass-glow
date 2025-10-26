@@ -129,7 +129,7 @@ export default function LandingPage() {
         <p className="mt-4 font-normal text-base text-neutral-300 max-w-lg text-center mx-auto">
           Create stunning, professional resumes in minutes with Resume Flow. Modern templates, easy customization, and ATS-friendly designs.
         </p>
-        <div className="flex items-center justify-center space-x-4 mt-8">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 mt-8">
         <HoverBorderGradient
             containerClassName="rounded-full"
             as="button"
