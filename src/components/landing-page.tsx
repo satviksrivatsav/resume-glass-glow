@@ -124,7 +124,7 @@ export default function LandingPage() {
       <Spotlight />
       <div className="p-4 px-6 max-w-7xl mx-auto relative z-10 w-full pt-28 md:pt-0">
         <h1 className="text-3xl md:text-7xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50 leading-tight md:leading-tight pb-1">
-          Everyone <br /> deserves a great Resume.
+          Everyone <br /> Deserves a great Resume.
         </h1>
         <p className="mt-3 md:mt-4 font-normal text-sm md:text-base text-neutral-300 max-w-lg text-center mx-auto px-2">
           Create stunning, professional resumes in minutes with Resume Flow. Modern templates, easy customization, and ATS-friendly designs.
