@@ -10,8 +10,7 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@/components/ui/resizable-navbar";
-import { useState, useEffect } from "react";
-import { FreeOverlay } from "@/components/FreeOverlay";
+import { useState } from "react";
 
 const Index = () => {
   const navItems = [
@@ -30,22 +29,6 @@ const Index = () => {
   ];
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showFreeOverlay, setShowFreeOverlay] = useState(false);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      if (window.location.hash === "#pricing") {
-        setShowFreeOverlay(true);
-      }
-    };
-
-    // Check on mount
-    handleHashChange();
-
-    // Listen for hash changes
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
 
   return (
     <main className="min-h-screen">
@@ -84,10 +67,6 @@ const Index = () => {
         </MobileNav>
       </Navbar>
       <LandingPage />
-      <FreeOverlay
-        isVisible={showFreeOverlay}
-        onComplete={() => setShowFreeOverlay(false)}
-      />
     </main>
   );
 };
