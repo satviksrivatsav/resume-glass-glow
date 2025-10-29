@@ -1,5 +1,5 @@
 import { useResumeStore } from "@/stores/resumeStore";
-import { forwardRef } from "react";
+import { forwardRef, useMemo, useRef, useLayoutEffect, useState } from "react";
 import { format } from "date-fns";
 import { Phone, Mail, Globe, Github, Linkedin, MapPin } from "lucide-react";
 
@@ -13,42 +13,23 @@ const IconWrapper = ({ children }: { children: React.ReactNode }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{children}</div>
 );
 
-export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
-  const { resumeData } = useResumeStore();
-  const { personalInfo, education, workExperience, projects, skills, customSections, settings } = resumeData;
-  
-  const sizes = fontSizeMap[settings.fontSize];
-  const pageWidth = settings.documentSize === 'letter' ? '8.5in' : '210mm';
-  const pageHeight = settings.documentSize === 'letter' ? '11in' : '297mm';
+const PageBreak = () => <div style={{ pageBreakAfter: 'always' }}></div>;
 
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return '';
-    try {
-      const [year, month] = dateStr.split('-');
-      return format(new Date(parseInt(year), parseInt(month) - 1), 'MMM yyyy');
-    } catch {
-      return dateStr;
-    }
-  };
-
+const ResumeContent = ({
+  personalInfo,
+  education,
+  workExperience,
+  projects,
+  skills,
+  customSections,
+  settings,
+  sizes,
+  formatDate
+}: any) => {
   return (
-    <div
-      ref={ref}
-      style={{
-        width: pageWidth,
-        minHeight: pageHeight,
-        fontFamily: settings.fontFamily,
-        fontSize: sizes.base,
-        backgroundColor: 'white',
-        color: '#000',
-        padding: '0.5in',
-        margin: '0 auto',
-        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-      }}
-      className="print:shadow-none"
-    >
+    <>
       {/* Header */}
-      <div style={{ marginBottom: '16px', borderBottom: `2px solid ${settings.themeColor}`, paddingBottom: '12px' }}>
+      <div className="resume-header" style={{ marginBottom: '16px', borderBottom: `2px solid ${settings.themeColor}`, paddingBottom: '12px' }}>
         <h1 style={{ fontSize: sizes.name, fontWeight: 'bold', color: settings.themeColor, margin: '0 0 8px 0' }}>
           {personalInfo.name || 'Your Name'}
         </h1>
@@ -64,22 +45,22 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
 
       {/* Summary */}
       {personalInfo.summary && (
-        <div style={{ marginBottom: '16px' }}>
+        <div className="resume-section" style={{ marginBottom: '16px' }}>
           <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
             PROFESSIONAL SUMMARY
           </h2>
-          <p style={{ color: '#374151', lineHeight: '1.5', margin: 0, whiteSpace: 'pre-line' }}>{personalInfo.summary}</p>
+          <div className="resume-item" style={{ color: '#374151', lineHeight: '1.5', margin: 0, whiteSpace: 'pre-line' }}>{personalInfo.summary}</div>
         </div>
       )}
 
       {/* Work Experience */}
       {workExperience.length > 0 && (
-        <div style={{ marginBottom: '16px' }}>
+        <div className="resume-section" style={{ marginBottom: '16px' }}>
           <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
             WORK EXPERIENCE
           </h2>
-          {workExperience.map((exp) => (
-            <div key={exp.id} style={{ marginBottom: '12px' }}>
+          {workExperience.map((exp: any) => (
+            <div key={exp.id} className="resume-item" style={{ marginBottom: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
                 <div>
                   <strong style={{ color: '#111827' }}>{exp.position}</strong>
@@ -106,12 +87,12 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
 
       {/* Education */}
       {education.length > 0 && (
-        <div style={{ marginBottom: '16px' }}>
+        <div className="resume-section" style={{ marginBottom: '16px' }}>
           <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
             EDUCATION
           </h2>
-          {education.map((edu) => (
-            <div key={edu.id} style={{ marginBottom: '12px' }}>
+          {education.map((edu: any) => (
+            <div key={edu.id} className="resume-item" style={{ marginBottom: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
                 <div>
                   <strong style={{ color: '#111827' }}>{edu.degree}</strong>
@@ -137,12 +118,12 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
 
       {/* Projects */}
       {projects.length > 0 && (
-        <div style={{ marginBottom: '16px' }}>
+        <div className="resume-section" style={{ marginBottom: '16px' }}>
           <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
             PROJECTS
           </h2>
-          {projects.map((proj) => (
-            <div key={proj.id} style={{ marginBottom: '12px' }}>
+          {projects.map((proj: any) => (
+            <div key={proj.id} className="resume-item" style={{ marginBottom: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
                 <strong style={{ color: '#111827' }}>{proj.name}</strong>
                 {proj.link && (
@@ -168,13 +149,13 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
 
       {/* Skills */}
       {skills.length > 0 && (
-        <div style={{ marginBottom: '16px' }}>
+        <div className="resume-section" style={{ marginBottom: '16px' }}>
           <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
             SKILLS
           </h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {skills.map((skill) => (
-              <div key={skill.id} style={{ color: '#374151' }}>
+            {skills.map((skill: any) => (
+              <div key={skill.id} className="resume-item" style={{ color: '#374151' }}>
                 <strong style={{ color: '#111827' }}>{skill.category}:</strong> {skill.items}
               </div>
             ))}
@@ -183,18 +164,166 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
       )}
 
       {/* Custom Sections */}
-      {customSections.map((section) => (
-        <div key={section.id} style={{ marginBottom: '16px' }}>
+      {customSections.map((section: any) => (
+        <div key={section.id} className="resume-section" style={{ marginBottom: '16px' }}>
           <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
             {section.title.toUpperCase()}
           </h2>
-          <div style={{ color: '#374151', lineHeight: '1.5', whiteSpace: 'pre-line' }}>
+          <div className="resume-item" style={{ color: '#374151', lineHeight: '1.5', whiteSpace: 'pre-line' }}>
             {section.description}
           </div>
         </div>
       ))}
+    </>
+  )
+}
 
-    </div>
+
+export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
+  const { resumeData } = useResumeStore();
+  const { personalInfo, education, workExperience, projects, skills, customSections, settings } = resumeData;
+  const [pages, setPages] = useState<any[]>([]);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const sizes = fontSizeMap[settings.fontSize];
+  const pageWidth = settings.documentSize === 'letter' ? '8.5in' : '210mm';
+  const pageHeight = settings.documentSize === 'letter' ? '11in' : '297mm';
+  const pageMargin = '0.5in';
+
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    try {
+      const [year, month] = dateStr.split('-');
+      return format(new Date(parseInt(year), parseInt(month) - 1), 'MMM yyyy');
+    } catch {
+      return dateStr;
+    }
+  };
+
+  useLayoutEffect(() => {
+    const measureAndPaginate = () => {
+      if (!contentRef.current) return;
+
+      const pageHeightPx = (parseFloat(pageHeight) * 96) - (parseFloat(pageMargin) * 2 * 96);
+      const contentEl = contentRef.current;
+      
+      const allElements = Array.from(contentEl.children) as HTMLElement[];
+      const header = allElements.find(el => el.classList.contains('resume-header'));
+      const sections = allElements.filter(el => el.classList.contains('resume-section'));
+
+      let currentPage: any[] = [];
+      let currentPageHeight = 0;
+      const newPages = [];
+      
+      const headerHeight = header?.offsetHeight || 0;
+      currentPageHeight += headerHeight;
+
+      if(header) currentPage.push(header.cloneNode(true));
+      
+
+      for (const section of sections) {
+        const sectionItems = Array.from(section.querySelectorAll('.resume-item')) as HTMLElement[];
+        const sectionTitle = section.querySelector('h2');
+        
+        let sectionHeight = sectionTitle?.offsetHeight || 0;
+
+        if (currentPageHeight + sectionHeight > pageHeightPx) {
+          newPages.push(currentPage);
+          currentPage = [];
+          currentPageHeight = 0;
+        }
+
+        const sectionClone = section.cloneNode(true) as HTMLElement;
+        while (sectionClone.firstChild) {
+          sectionClone.removeChild(sectionClone.firstChild);
+        }
+        if(sectionTitle) sectionClone.appendChild(sectionTitle.cloneNode(true));
+
+        currentPageHeight += sectionHeight;
+        currentPage.push(sectionClone)
+
+        for(const item of sectionItems) {
+          const itemHeight = item.offsetHeight;
+          if (currentPageHeight + itemHeight > pageHeightPx) {
+            newPages.push(currentPage);
+            currentPage = [];
+            currentPageHeight = 0;
+
+            const newSectionClone = section.cloneNode(true) as HTMLElement;
+            while (newSectionClone.firstChild) {
+              newSectionClone.removeChild(newSectionClone.firstChild);
+            }
+            if(sectionTitle) newSectionClone.appendChild(sectionTitle.cloneNode(true));
+            
+            currentPage.push(newSectionClone);
+            currentPageHeight += sectionTitle?.offsetHeight || 0;
+          }
+          currentPageHeight += itemHeight;
+          const lastPageSection = currentPage[currentPage.length -1] as HTMLElement
+          lastPageSection.appendChild(item.cloneNode(true));
+        }
+      }
+
+      newPages.push(currentPage);
+      setPages(newPages);
+    };
+
+    measureAndPaginate();
+  }, [resumeData, settings, pageHeight, pageMargin]);
+
+
+  const contentProps = {
+    personalInfo,
+    education,
+    workExperience,
+    projects,
+    skills,
+    customSections,
+    settings,
+    sizes,
+    formatDate
+  }
+
+  return (
+    <>
+      <div style={{ opacity: 0, position: 'absolute', zIndex: -1, pointerEvents: 'none' }}>
+        <div
+          ref={contentRef}
+          style={{
+            width: pageWidth,
+            padding: pageMargin,
+            fontFamily: settings.fontFamily,
+            fontSize: sizes.base,
+          }}
+        >
+          <ResumeContent {...contentProps} />
+        </div>
+      </div>
+
+      <div ref={ref}>
+        {pages.map((pageContent, i) => (
+          <div
+            key={i}
+            className="print:shadow-none"
+            style={{
+              width: pageWidth,
+              height: pageHeight,
+              fontFamily: settings.fontFamily,
+              fontSize: sizes.base,
+              backgroundColor: 'white',
+              color: '#000',
+              padding: pageMargin,
+              margin: '0 auto',
+              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+              marginBottom: i < pages.length - 1 ? '16px' : '0',
+            }}
+          >
+            {pageContent.map((el:any, j:number) => <div key={j} dangerouslySetInnerHTML={{ __html: el.outerHTML }} />)}
+            {i < pages.length - 1 && <PageBreak />}
+          </div>
+        ))}
+      </div>
+    </>
   );
 });
 
