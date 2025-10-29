@@ -22,10 +22,20 @@ export const CustomSectionsForm = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="p-4 border rounded-lg space-y-4 relative"
+              className="p-4 border rounded-lg space-y-4"
             >
               <div className="space-y-2">
-                <label htmlFor={`custom-title-${index}`} className="font-medium">Title</label>
+                <div className="flex justify-between items-center">
+                  <label htmlFor={`custom-title-${index}`} className="font-medium">Title</label>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-destructive"
+                    onClick={() => deleteCustomSection(section.id)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
                 <Input
                   id={`custom-title-${index}`}
                   placeholder="e.g., Certifications, Awards"
@@ -43,14 +53,6 @@ export const CustomSectionsForm = () => {
                   rows={5}
                 />
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-2 text-destructive"
-                onClick={() => deleteCustomSection(section.id)}
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
             </motion.div>
           ))}
         </AnimatePresence>
