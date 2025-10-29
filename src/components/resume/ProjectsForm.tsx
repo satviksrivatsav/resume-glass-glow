@@ -5,11 +5,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FolderGit2, Plus, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const ProjectsForm = () => {
   const { resumeData, addProject, updateProject, deleteProject } = useResumeStore();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (resumeData.projects.length > 0) {
+      setExpandedId(resumeData.projects[resumeData.projects.length - 1].id);
+    }
+  }, [resumeData.projects]);
 
   const handleAdd = () => {
     const newProject = {
