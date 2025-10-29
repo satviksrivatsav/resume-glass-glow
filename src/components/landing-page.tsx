@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Spotlight } from "@/components/ui/spotlight-new";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT";
 
@@ -119,6 +120,8 @@ const AceternityLogo = () => {
 };
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="h-screen w-full rounded-md flex md:items-center md:justify-center bg-black antialiased bg-grid-white/[0.02] relative overflow-hidden">
       <Spotlight />
@@ -133,7 +136,8 @@ export default function LandingPage() {
         <HoverBorderGradient
             containerClassName="rounded-full"
             as="button"
-            className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
+            onClick={() => navigate("/resume-builder")}
+            className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2 cursor-pointer"
           >
             <AceternityLogo />
             <span>Build now</span>
@@ -141,7 +145,7 @@ export default function LandingPage() {
           <HoverBorderGradient
             containerClassName="rounded-full"
             as="button"
-            className="dark:bg-black bg-black text-white dark:text-white flex items-center space-x-2"
+            className="dark:bg-black bg-black text-white dark:text-white flex items-center space-x-2 cursor-pointer"
           >
             <AceternityLogo />
             <span>Create from existing resume</span>
