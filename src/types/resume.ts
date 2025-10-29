@@ -5,6 +5,7 @@ export interface PersonalInfo {
   location: string;
   linkedin?: string;
   website?: string;
+  github?: string;
   summary: string;
 }
 
@@ -46,6 +47,12 @@ export interface Skill {
   items: string;
 }
 
+export interface CustomSection {
+  id: string;
+  title: string;
+  description: string;
+}
+
 export interface ResumeSettings {
   themeColor: string;
   fontFamily: string;
@@ -59,6 +66,7 @@ export interface ResumeData {
   workExperience: WorkExperience[];
   projects: Project[];
   skills: Skill[];
+  customSections: CustomSection[];
   settings: ResumeSettings;
 }
 
@@ -70,12 +78,14 @@ export const defaultResumeData: ResumeData = {
     location: '',
     linkedin: '',
     website: '',
+    github: '',
     summary: '',
   },
   education: [],
   workExperience: [],
   projects: [],
   skills: [],
+  customSections: [],
   settings: {
     themeColor: '#38bdf8',
     fontFamily: 'Open Sans',

@@ -1,22 +1,26 @@
 import { create } from 'zustand';
-import { ResumeData, defaultResumeData } from '@/types/resume';
+import { v4 as uuidv4 } from 'uuid';
+import { ResumeData, defaultResumeData, CustomSection } from '@/types/resume';
 
 interface ResumeStore {
   resumeData: ResumeData;
   updatePersonalInfo: (data: Partial<ResumeData['personalInfo']>) => void;
   updateSettings: (settings: Partial<ResumeData['settings']>) => void;
-  addEducation: (education: ResumeData['education'][0]) => void;
+  addEducation: () => void;
   updateEducation: (id: string, education: Partial<ResumeData['education'][0]>) => void;
   deleteEducation: (id: string) => void;
-  addWorkExperience: (experience: ResumeData['workExperience'][0]) => void;
+  addWorkExperience: () => void;
   updateWorkExperience: (id: string, experience: Partial<ResumeData['workExperience'][0]>) => void;
   deleteWorkExperience: (id: string) => void;
-  addProject: (project: ResumeData['projects'][0]) => void;
+  addProject: () => void;
   updateProject: (id: string, project: Partial<ResumeData['projects'][0]>) => void;
   deleteProject: (id: string) => void;
-  addSkill: (skill: ResumeData['skills'][0]) => void;
+  addSkill: () => void;
   updateSkill: (id: string, skill: Partial<ResumeData['skills'][0]>) => void;
   deleteSkill: (id: string) => void;
+  addCustomSection: () => void;
+  updateCustomSection: (id: string, section: Partial<CustomSection>) => void;
+  deleteCustomSection: (id: string) => void;
   resetResume: () => void;
 }
 
@@ -39,11 +43,14 @@ export const useResumeStore = create<ResumeStore>((set) => ({
       },
     })),
   
-  addEducation: (education) =>
+  addEducation: () =>
     set((state) => ({
       resumeData: {
         ...state.resumeData,
-        education: [...state.resumeData.education, education],
+        education: [
+          ...state.resumeData.education,
+          { id: uuidv4(), school: '', degree: '', field: '', startDate: '', endDate: '', gpa: '', description: '' },
+        ],
       },
     })),
   
@@ -65,11 +72,14 @@ export const useResumeStore = create<ResumeStore>((set) => ({
       },
     })),
   
-  addWorkExperience: (experience) =>
+  addWorkExperience: () =>
     set((state) => ({
       resumeData: {
         ...state.resumeData,
-        workExperience: [...state.resumeData.workExperience, experience],
+        workExperience: [
+          ...state.resumeData.workExperience,
+          { id: uuidv4(), company: '', position: '', startDate: '', endDate: '', current: false, location: '', description: '' },
+        ],
       },
     })),
   
@@ -91,11 +101,14 @@ export const useResumeStore = create<ResumeStore>((set) => ({
       },
     })),
   
-  addProject: (project) =>
+  addProject: () =>
     set((state) => ({
       resumeData: {
         ...state.resumeData,
-        projects: [...state.resumeData.projects, project],
+        projects: [
+          ...state.resumeData.projects,
+          { id: uuidv4(), name: '', startDate: '', endDate: '', technologies: '', link: '', description: '' },
+        ],
       },
     })),
   
@@ -117,14 +130,14 @@ export const useResumeStore = create<ResumeStore>((set) => ({
       },
     })),
   
-  addSkill: (skill) =>
+  addSkill: () =>
     set((state) => ({
       resumeData: {
         ...state.resumeData,
-        skills: [...state.resumeData.skills, skill],
+        skills: [...state.resumeData.skills, { id: uuidv4(), category: '', items: '' }],
       },
     })),
-  
+
   updateSkill: (id, skill) =>
     set((state) => ({
       resumeData: {
@@ -134,12 +147,41 @@ export const useResumeStore = create<ResumeStore>((set) => ({
         ),
       },
     })),
-  
+
   deleteSkill: (id) =>
     set((state) => ({
       resumeData: {
         ...state.resumeData,
         skills: state.resumeData.skills.filter((item) => item.id !== id),
+      },
+    })),
+
+  addCustomSection: () =>
+    set((state) => ({
+      resumeData: {
+        ...state.resumeData,
+        customSections: [
+          ...state.resumeData.customSections,
+          { id: uuidv4(), title: 'New Section', description: '' },
+        ],
+      },
+    })),
+  
+  updateCustomSection: (id, section) =>
+    set((state) => ({
+      resumeData: {
+        ...state.resumeData,
+        customSections: state.resumeData.customSections.map((item) =>
+          item.id === id ? { ...item, ...section } : item
+        ),
+      },
+    })),
+
+  deleteCustomSection: (id) =>
+    set((state) => ({
+      resumeData: {
+        ...state.resumeData,
+        customSections: state.resumeData.customSections.filter((item) => item.id !== id),
       },
     })),
   

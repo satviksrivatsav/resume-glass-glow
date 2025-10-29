@@ -1,6 +1,7 @@
 import { useResumeStore } from "@/stores/resumeStore";
 import { forwardRef } from "react";
 import { format } from "date-fns";
+import { Phone, Mail, Globe, Github, Linkedin, MapPin } from "lucide-react";
 
 const fontSizeMap = {
   compact: { base: '9pt', heading: '11pt', name: '18pt' },
@@ -8,9 +9,13 @@ const fontSizeMap = {
   large: { base: '13pt', heading: '15pt', name: '26pt' },
 };
 
+const IconWrapper = ({ children }: { children: React.ReactNode }) => (
+  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{children}</div>
+);
+
 export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
   const { resumeData } = useResumeStore();
-  const { personalInfo, education, workExperience, projects, skills, settings } = resumeData;
+  const { personalInfo, education, workExperience, projects, skills, customSections, settings } = resumeData;
   
   const sizes = fontSizeMap[settings.fontSize];
   const pageWidth = settings.documentSize === 'letter' ? '8.5in' : '210mm';
@@ -48,15 +53,12 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
           {personalInfo.name || 'Your Name'}
         </h1>
         <div style={{ fontSize: sizes.base, display: 'flex', flexWrap: 'wrap', gap: '8px 16px', color: '#374151' }}>
-          {personalInfo.email && <span>{personalInfo.email}</span>}
-          {personalInfo.phone && <span>•</span>}
-          {personalInfo.phone && <span>{personalInfo.phone}</span>}
-          {personalInfo.location && <span>•</span>}
-          {personalInfo.location && <span>{personalInfo.location}</span>}
-          {personalInfo.linkedin && <span>•</span>}
-          {personalInfo.linkedin && <span>{personalInfo.linkedin}</span>}
-          {personalInfo.website && <span>•</span>}
-          {personalInfo.website && <span>{personalInfo.website}</span>}
+          {personalInfo.email && <IconWrapper><Mail size={12} /><span>{personalInfo.email}</span></IconWrapper>}
+          {personalInfo.phone && <IconWrapper><Phone size={12} /><span>{personalInfo.phone}</span></IconWrapper>}
+          {personalInfo.location && <IconWrapper><MapPin size={12} /><span>{personalInfo.location}</span></IconWrapper>}
+          {personalInfo.linkedin && <IconWrapper><Linkedin size={12} /><span>{personalInfo.linkedin}</span></IconWrapper>}
+          {personalInfo.website && <IconWrapper><Globe size={12} /><span>{personalInfo.website}</span></IconWrapper>}
+          {personalInfo.github && <IconWrapper><Github size={12} /><span>{personalInfo.github}</span></IconWrapper>}
         </div>
       </div>
 
@@ -66,7 +68,7 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
           <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
             PROFESSIONAL SUMMARY
           </h2>
-          <p style={{ color: '#374151', lineHeight: '1.5', margin: 0 }}>{personalInfo.summary}</p>
+          <p style={{ color: '#374151', lineHeight: '1.5', margin: 0, whiteSpace: 'pre-line' }}>{personalInfo.summary}</p>
         </div>
       )}
 
@@ -81,9 +83,9 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
                 <div>
                   <strong style={{ color: '#111827' }}>{exp.position}</strong>
-                  {exp.company && <span style={{ color: '#374151' }}> - {exp.company}</span>}
+                  {exp.company && <span style={{ color: '#374151' }}>, {exp.company}</span>}
                 </div>
-                <span style={{ fontSize: sizes.base, color: '#6B7280' }}>
+                <span style={{ fontSize: sizes.base, color: '#6B7280', whiteSpace: 'nowrap', paddingLeft: '16px' }}>
                   {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
                 </span>
               </div>
@@ -115,7 +117,7 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
                   <strong style={{ color: '#111827' }}>{edu.degree}</strong>
                   {edu.field && <span style={{ color: '#374151' }}> in {edu.field}</span>}
                 </div>
-                <span style={{ fontSize: sizes.base, color: '#6B7280' }}>
+                <span style={{ fontSize: sizes.base, color: '#6B7280', whiteSpace: 'nowrap', paddingLeft: '16px' }}>
                   {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
                 </span>
               </div>
@@ -143,20 +145,15 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
             <div key={proj.id} style={{ marginBottom: '12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '4px' }}>
                 <strong style={{ color: '#111827' }}>{proj.name}</strong>
-                {proj.startDate && (
-                  <span style={{ fontSize: sizes.base, color: '#6B7280' }}>
-                    {formatDate(proj.startDate)} - {formatDate(proj.endDate)}
-                  </span>
+                {proj.link && (
+                  <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ fontSize: sizes.base, color: settings.themeColor }}>
+                    {proj.link}
+                  </a>
                 )}
               </div>
               {proj.technologies && (
-                <div style={{ fontSize: sizes.base, color: '#6B7280', marginBottom: '4px' }}>
-                  Technologies: {proj.technologies}
-                </div>
-              )}
-              {proj.link && (
-                <div style={{ fontSize: sizes.base, color: settings.themeColor, marginBottom: '4px' }}>
-                  {proj.link}
+                <div style={{ fontSize: '0.9em', color: '#6B7280', marginBottom: '4px' }}>
+                  <strong>Technologies:</strong> {proj.technologies}
                 </div>
               )}
               {proj.description && (
@@ -171,17 +168,32 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
 
       {/* Skills */}
       {skills.length > 0 && (
-        <div>
+        <div style={{ marginBottom: '16px' }}>
           <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
             SKILLS
           </h2>
-          {skills.map((skill) => (
-            <div key={skill.id} style={{ marginBottom: '6px', color: '#374151' }}>
-              <strong style={{ color: '#111827' }}>{skill.category}:</strong> {skill.items}
-            </div>
-          ))}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {skills.map((skill) => (
+              <div key={skill.id} style={{ color: '#374151' }}>
+                <strong style={{ color: '#111827' }}>{skill.category}:</strong> {skill.items}
+              </div>
+            ))}
+          </div>
         </div>
       )}
+
+      {/* Custom Sections */}
+      {customSections.map((section) => (
+        <div key={section.id} style={{ marginBottom: '16px' }}>
+          <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
+            {section.title.toUpperCase()}
+          </h2>
+          <div style={{ color: '#374151', lineHeight: '1.5', whiteSpace: 'pre-line' }}>
+            {section.description}
+          </div>
+        </div>
+      ))}
+
     </div>
   );
 });

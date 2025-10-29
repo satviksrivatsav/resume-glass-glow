@@ -1,9 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { PersonalInfoForm } from "@/components/resume/PersonalInfoForm";
 import { WorkExperienceForm } from "@/components/resume/WorkExperienceForm";
 import { EducationForm } from "@/components/resume/EducationForm";
 import { ProjectsForm } from "@/components/resume/ProjectsForm";
 import { SkillsForm } from "@/components/resume/SkillsForm";
+import { CustomSectionsForm } from "@/components/resume/CustomSectionForm";
 import { ResumeSettings } from "@/components/resume/ResumeSettings";
 import { ResumePreview } from "@/components/resume/ResumePreview";
 import { Button } from "@/components/ui/button";
@@ -20,15 +21,20 @@ const ResumeBuilder = () => {
   const resumeRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (window.innerWidth >= 1024) {
+      setShowPreview(true);
+    }
+  }, []);
+
   const handlePrint = useReactToPrint({
-    contentRef: resumeRef,
+    content: () => resumeRef.current,
     documentTitle: "Resume",
     onAfterPrint: () => toast.success("Resume downloaded successfully!"),
   });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -67,83 +73,51 @@ const ResumeBuilder = () => {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Form Section */}
+        <div className={`grid gap-8 ${showPreview ? 'lg:grid-cols-2' : 'grid-cols-1'}`}>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6"
           >
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
-                <TabsTrigger value="personal" className="text-xs sm:text-sm">Personal</TabsTrigger>
-                <TabsTrigger value="work" className="text-xs sm:text-sm">Work</TabsTrigger>
-                <TabsTrigger value="education" className="text-xs sm:text-sm">Education</TabsTrigger>
-                <TabsTrigger value="projects" className="text-xs sm:text-sm">Projects</TabsTrigger>
-                <TabsTrigger value="skills" className="text-xs sm:text-sm">Skills</TabsTrigger>
-                <TabsTrigger value="settings" className="text-xs sm:text-sm">Settings</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
+                <TabsTrigger value="personal">Personal</TabsTrigger>
+                <TabsTrigger value="work">Work</TabsTrigger>
+                <TabsTrigger value="education">Education</TabsTrigger>
+                <TabsTrigger value="projects">Projects</TabsTrigger>
+                <TabsTrigger value="skills">Skills</TabsTrigger>
+                <TabsTrigger value="custom">Custom</TabsTrigger>
+                <TabsTrigger value="settings">Settings</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="personal" className="mt-6">
-                <PersonalInfoForm />
-              </TabsContent>
-
-              <TabsContent value="work" className="mt-6">
-                <WorkExperienceForm />
-              </TabsContent>
-
-              <TabsContent value="education" className="mt-6">
-                <EducationForm />
-              </TabsContent>
-
-              <TabsContent value="projects" className="mt-6">
-                <ProjectsForm />
-              </TabsContent>
-
-              <TabsContent value="skills" className="mt-6">
-                <SkillsForm />
-              </TabsContent>
-
-              <TabsContent value="settings" className="mt-6">
-                <ResumeSettings />
-              </TabsContent>
+              <TabsContent value="personal"><PersonalInfoForm /></TabsContent>
+              <TabsContent value="work"><WorkExperienceForm /></TabsContent>
+              <TabsContent value="education"><EducationForm /></TabsContent>
+              <TabsContent value="projects"><ProjectsForm /></TabsContent>
+              <TabsContent value="skills"><SkillsForm /></TabsContent>
+              <TabsContent value="custom"><CustomSectionsForm /></TabsContent>
+              <TabsContent value="settings"><ResumeSettings /></TabsContent>
             </Tabs>
           </motion.div>
 
-          {/* Preview Section */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className={`${showPreview ? 'block' : 'hidden lg:block'}`}
-          >
-            <div className="sticky top-24">
-              <div className="bg-card rounded-lg border p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold">Live Preview</h2>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handlePrint}
-                    className="gap-2"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download
-                  </Button>
-                </div>
-                <div className="overflow-auto max-h-[calc(100vh-200px)] bg-gray-100 p-4 rounded-lg">
-                  <div className="transform origin-top" style={{ transform: 'scale(0.7)' }}>
-                    <ResumePreview ref={resumeRef} />
+          {showPreview && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              <div className="sticky top-24">
+                <div className="bg-card rounded-lg border p-4">
+                  <h2 className="text-lg font-semibold mb-4">Live Preview</h2>
+                  <div className="overflow-y-auto max-h-[calc(100vh-200px)] bg-gray-100 rounded-lg flex justify-center p-4">
+                    <div ref={resumeRef} className="transform origin-top mx-auto" style={{ transform: 'scale(0.8)' }}>
+                      <ResumePreview />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          )}
         </div>
-      </div>
-
-      {/* Hidden full-size preview for printing */}
-      <div className="hidden print:block">
-        <ResumePreview ref={resumeRef} />
       </div>
     </div>
   );
