@@ -1,11 +1,15 @@
 import { useResumeStore } from "@/stores/resumeStore";
-import { Settings } from "lucide-react";
+import { Settings, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const THEME_COLORS = [
   '#ef4444', '#f87171', '#fb923c', '#f97316',
-  '#fbbf24', '#f59e0b', '#22c55e', '#16a34a',
-  '#38bdf8', '#0ea5e9', '#a78bfa', '#7c3aed',
+  '#fbbf24', '#22c55e', '#16a34a', '#38bdf8',
+  '#0ea5e9', '#a78bfa', '#7c3aed',
 ];
 
 const FONT_FAMILIES = [
@@ -27,6 +31,12 @@ const DOCUMENT_SIZES = [
 export const ResumeSettings = () => {
   const { resumeData, updateSettings } = useResumeStore();
   const { settings } = resumeData;
+  const [customColor, setCustomColor] = useState(settings.themeColor);
+
+  const handleColorChange = (color: string) => {
+    setCustomColor(color);
+    updateSettings({ themeColor: color });
+  };
 
   return (
     <motion.div
@@ -68,6 +78,40 @@ export const ResumeSettings = () => {
               )}
             </motion.button>
           ))}
+          <Dialog>
+            <DialogTrigger asChild>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full aspect-square rounded-md relative transition-all bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center"
+              >
+                <Pencil className="w-6 h-6 text-white" />
+              </motion.button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Choose a custom color</DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col items-center gap-4">
+                <Input
+                  type="color"
+                  value={customColor}
+                  onChange={(e) => handleColorChange(e.target.value)}
+                  className="w-full h-24 p-0 m-0 border-none cursor-pointer"
+                  style={{ padding: 0, margin: 0 }}
+                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="text"
+                    value={customColor}
+                    onChange={(e) => handleColorChange(e.target.value)}
+                    placeholder="#ffffff"
+                  />
+                  <Button onClick={() => updateSettings({ themeColor: customColor })}>Set Color</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
