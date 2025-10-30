@@ -2,10 +2,12 @@ import { useResumeStore } from "@/stores/resumeStore";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import './quill-custom.css';
 
 export const CustomSectionsForm = () => {
   const { resumeData, addCustomSection, updateCustomSection, deleteCustomSection } = useResumeStore();
@@ -16,6 +18,13 @@ export const CustomSectionsForm = () => {
       setExpandedId(resumeData.customSections[resumeData.customSections.length - 1].id);
     }
   }, [resumeData.customSections]);
+
+  const modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ 'list': 'bullet' }]
+    ],
+  };
 
   return (
     <Card>
@@ -64,11 +73,11 @@ export const CustomSectionsForm = () => {
                     className="space-y-2"
                   >
                     <label className="font-medium">Description</label>
-                    <Textarea
-                      placeholder="Describe your custom section here..."
+                    <ReactQuill
                       value={section.description}
-                      onChange={(e) => updateCustomSection(section.id, { description: e.target.value })}
-                      rows={5}
+                      onChange={(value) => updateCustomSection(section.id, { description: value })}
+                      modules={modules}
+                      placeholder="Describe your custom section here..."
                     />
                   </motion.div>
                 )}

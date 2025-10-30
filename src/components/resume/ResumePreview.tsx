@@ -169,9 +169,11 @@ const ResumeContent = ({
           <h2 style={{ fontSize: sizes.heading, fontWeight: 'bold', color: settings.themeColor, marginBottom: '8px' }}>
             {section.title.toUpperCase()}
           </h2>
-          <div className="resume-item" style={{ color: '#374151', lineHeight: '1.5', whiteSpace: 'pre-line' }}>
-            {section.description}
-          </div>
+          <div
+            className="resume-item"
+            style={{ color: '#374151', lineHeight: '1.5' }}
+            dangerouslySetInnerHTML={{ __html: section.description }}
+          />
         </div>
       ))}
     </>
