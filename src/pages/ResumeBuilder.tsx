@@ -28,7 +28,7 @@ const ResumeBuilder = () => {
   }, []);
 
   const handlePrint = useReactToPrint({
-    content: () => resumeRef.current,
+    contentRef: resumeRef,
     documentTitle: "Resume",
     onAfterPrint: () => toast.success("Resume downloaded successfully!"),
   });
@@ -108,8 +108,8 @@ const ResumeBuilder = () => {
               <div className="sticky top-24">
                 <div className="bg-card rounded-lg border p-4">
                   <h2 className="text-lg font-semibold mb-4">Live Preview</h2>
-                  <div className="overflow-y-auto max-h-[calc(100vh-200px)] bg-gray-100 rounded-lg flex justify-center p-4">
-                    <div ref={resumeRef} className="transform origin-top mx-auto" style={{ transform: 'scale(0.8)' }}>
+                  <div className="bg-gray-100 rounded-lg flex justify-center p-4">
+                    <div ref={resumeRef} className="transform origin-top mx-auto" style={{ transform: 'scale(0.75)' }}>
                       <ResumePreview />
                     </div>
                   </div>

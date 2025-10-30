@@ -5,11 +5,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Plus, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const EducationForm = () => {
   const { resumeData, addEducation, updateEducation, deleteEducation } = useResumeStore();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (resumeData.education.length > 0) {
+      setExpandedId(resumeData.education[resumeData.education.length - 1].id);
+    }
+  }, [resumeData.education]);
 
   const handleAdd = () => {
     const newEducation = {

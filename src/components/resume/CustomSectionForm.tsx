@@ -2,12 +2,29 @@ import { useResumeStore } from "@/stores/resumeStore";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import './quill-custom.css';
 
 export const CustomSectionsForm = () => {
   const { resumeData, addCustomSection, updateCustomSection, deleteCustomSection } = useResumeStore();
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (resumeData.customSections.length > 0) {
+      setExpandedId(resumeData.customSections[resumeData.customSections.length - 1].id);
+    }
+  }, [resumeData.customSections]);
+
+  const modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ 'list': 'bullet' }]
+    ],
+  };
 
   return (
     <Card>
@@ -22,35 +39,49 @@ export const CustomSectionsForm = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="p-4 border rounded-lg space-y-4 relative"
+              className="p-4 border rounded-lg space-y-4"
             >
               <div className="space-y-2">
-                <label htmlFor={`custom-title-${index}`} className="font-medium">Title</label>
+                <div className="flex justify-between items-center">
+                  <button
+                    onClick={() => setExpandedId(expandedId === section.id ? null : section.id)}
+                    className="text-left flex-1 font-medium"
+                  >
+                    {section.title || `Custom Section ${index + 1}`}
+                  </button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-destructive"
+                    onClick={() => deleteCustomSection(section.id)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
                 <Input
-                  id={`custom-title-${index}`}
                   placeholder="e.g., Certifications, Awards"
                   value={section.title}
                   onChange={(e) => updateCustomSection(section.id, { title: e.target.value })}
                 />
               </div>
-              <div className="space-y-2">
-                <label htmlFor={`custom-description-${index}`} className="font-medium">Description</label>
-                <Textarea
-                  id={`custom-description-${index}`}
-                  placeholder="Describe your custom section here..."
-                  value={section.description}
-                  onChange={(e) => updateCustomSection(section.id, { description: e.target.value })}
-                  rows={5}
-                />
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-2 text-destructive"
-                onClick={() => deleteCustomSection(section.id)}
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
+              <AnimatePresence>
+                {expandedId === section.id && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="space-y-2"
+                  >
+                    <label className="font-medium">Description</label>
+                    <ReactQuill
+                      value={section.description}
+                      onChange={(value) => updateCustomSection(section.id, { description: value })}
+                      modules={modules}
+                      placeholder="Describe your custom section here..."
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           ))}
         </AnimatePresence>
