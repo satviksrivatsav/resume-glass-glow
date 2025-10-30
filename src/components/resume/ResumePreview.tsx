@@ -1,5 +1,5 @@
 import { useResumeStore } from "@/stores/resumeStore";
-import { forwardRef, useMemo, useRef, useLayoutEffect, useState } from "react";
+import { forwardRef } from "react";
 import { format } from "date-fns";
 import { Phone, Mail, Globe, Github, Linkedin, MapPin } from "lucide-react";
 
@@ -9,11 +9,14 @@ const fontSizeMap = {
   large: { base: '13pt', heading: '15pt', name: '26pt' },
 };
 
+const documentSizeMap = {
+  a4: { width: "210mm", height: "297mm" },
+  legal: { width: "8.5in", height: "14in" },
+};
+
 const IconWrapper = ({ children }: { children: React.ReactNode }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{children}</div>
 );
-
-const PageBreak = () => <div style={{ pageBreakAfter: 'always' }}></div>;
 
 const ResumeContent = ({
   personalInfo,
@@ -180,16 +183,13 @@ const ResumeContent = ({
   )
 }
 
-
 export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
   const { resumeData } = useResumeStore();
   const { personalInfo, education, workExperience, projects, skills, customSections, settings } = resumeData;
-  const [pages, setPages] = useState<any[]>([]);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   const sizes = fontSizeMap[settings.fontSize];
-  const pageWidth = settings.documentSize === 'letter' ? '8.5in' : '210mm';
-  const pageHeight = settings.documentSize === 'letter' ? '11in' : '297mm';
+  const { width: pageWidth, height: pageHeight } =
+  documentSizeMap[settings.documentSize as keyof typeof documentSizeMap] || documentSizeMap.a4;
   const pageMargin = '0.5in';
 
   const formatDate = (dateStr: string) => {
@@ -202,78 +202,6 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
     }
   };
 
-  useLayoutEffect(() => {
-    const measureAndPaginate = () => {
-      if (!contentRef.current) return;
-
-      const pageHeightPx = (parseFloat(pageHeight) * 96) - (parseFloat(pageMargin) * 2 * 96);
-      const contentEl = contentRef.current;
-      
-      const allElements = Array.from(contentEl.children) as HTMLElement[];
-      const header = allElements.find(el => el.classList.contains('resume-header'));
-      const sections = allElements.filter(el => el.classList.contains('resume-section'));
-
-      let currentPage: any[] = [];
-      let currentPageHeight = 0;
-      const newPages = [];
-      
-      const headerHeight = header?.offsetHeight || 0;
-      currentPageHeight += headerHeight;
-
-      if(header) currentPage.push(header.cloneNode(true));
-      
-
-      for (const section of sections) {
-        const sectionItems = Array.from(section.querySelectorAll('.resume-item')) as HTMLElement[];
-        const sectionTitle = section.querySelector('h2');
-        
-        let sectionHeight = sectionTitle?.offsetHeight || 0;
-
-        if (currentPageHeight + sectionHeight > pageHeightPx) {
-          newPages.push(currentPage);
-          currentPage = [];
-          currentPageHeight = 0;
-        }
-
-        const sectionClone = section.cloneNode(true) as HTMLElement;
-        while (sectionClone.firstChild) {
-          sectionClone.removeChild(sectionClone.firstChild);
-        }
-        if(sectionTitle) sectionClone.appendChild(sectionTitle.cloneNode(true));
-
-        currentPageHeight += sectionHeight;
-        currentPage.push(sectionClone)
-
-        for(const item of sectionItems) {
-          const itemHeight = item.offsetHeight;
-          if (currentPageHeight + itemHeight > pageHeightPx) {
-            newPages.push(currentPage);
-            currentPage = [];
-            currentPageHeight = 0;
-
-            const newSectionClone = section.cloneNode(true) as HTMLElement;
-            while (newSectionClone.firstChild) {
-              newSectionClone.removeChild(newSectionClone.firstChild);
-            }
-            if(sectionTitle) newSectionClone.appendChild(sectionTitle.cloneNode(true));
-            
-            currentPage.push(newSectionClone);
-            currentPageHeight += sectionTitle?.offsetHeight || 0;
-          }
-          currentPageHeight += itemHeight;
-          const lastPageSection = currentPage[currentPage.length -1] as HTMLElement
-          lastPageSection.appendChild(item.cloneNode(true));
-        }
-      }
-
-      newPages.push(currentPage);
-      setPages(newPages);
-    };
-
-    measureAndPaginate();
-  }, [resumeData, settings, pageHeight, pageMargin]);
-
-
   const contentProps = {
     personalInfo,
     education,
@@ -284,48 +212,25 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
     settings,
     sizes,
     formatDate
-  }
+  };
 
   return (
-    <>
-      <div style={{ opacity: 0, position: 'absolute', zIndex: -1, pointerEvents: 'none' }}>
-        <div
-          ref={contentRef}
-          style={{
-            width: pageWidth,
-            padding: pageMargin,
-            fontFamily: settings.fontFamily,
-            fontSize: sizes.base,
-          }}
-        >
-          <ResumeContent {...contentProps} />
-        </div>
-      </div>
-
-      <div ref={ref}>
-        {pages.map((pageContent, i) => (
-          <div
-            key={i}
-            className="print:shadow-none"
-            style={{
-              width: pageWidth,
-              height: pageHeight,
-              fontFamily: settings.fontFamily,
-              fontSize: sizes.base,
-              backgroundColor: 'white',
-              color: '#000',
-              padding: pageMargin,
-              margin: '0 auto',
-              boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-              marginBottom: i < pages.length - 1 ? '16px' : '0',
-            }}
-          >
-            {pageContent.map((el:any, j:number) => <div key={j} dangerouslySetInnerHTML={{ __html: el.outerHTML }} />)}
-            {i < pages.length - 1 && <PageBreak />}
-          </div>
-        ))}
-      </div>
-    </>
+    <div
+      ref={ref}
+      className="resume-preview-content" // ← ADDED THIS LINE
+      style={{
+        width: pageWidth,
+        minHeight: pageHeight,
+        overflow: 'hidden',
+        fontFamily: settings.fontFamily,
+        fontSize: sizes.base,
+        backgroundColor: 'white',
+        color: '#000',
+        padding: pageMargin,
+      }}
+    >
+      <ResumeContent {...contentProps} />
+    </div>
   );
 });
 

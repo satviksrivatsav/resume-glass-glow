@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PersonalInfoForm } from "@/components/resume/PersonalInfoForm";
 import { WorkExperienceForm } from "@/components/resume/WorkExperienceForm";
 import { EducationForm } from "@/components/resume/EducationForm";
@@ -7,18 +7,16 @@ import { SkillsForm } from "@/components/resume/SkillsForm";
 import { CustomSectionsForm } from "@/components/resume/CustomSectionForm";
 import { ResumeSettings } from "@/components/resume/ResumeSettings";
 import { ResumePreview } from "@/components/resume/ResumePreview";
+import { DownloadButton } from "@/components/resume/DownloadButton";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, Eye, FileText, ArrowLeft } from "lucide-react";
+import { Eye, FileText, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import { useReactToPrint } from "react-to-print";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 const ResumeBuilder = () => {
   const [activeTab, setActiveTab] = useState("personal");
   const [showPreview, setShowPreview] = useState(false);
-  const resumeRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,12 +24,6 @@ const ResumeBuilder = () => {
       setShowPreview(true);
     }
   }, []);
-
-  const handlePrint = useReactToPrint({
-    contentRef: resumeRef,
-    documentTitle: "Resume",
-    onAfterPrint: () => toast.success("Resume downloaded successfully!"),
-  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
@@ -60,13 +52,8 @@ const ResumeBuilder = () => {
                 <Eye className="w-4 h-4" />
                 {showPreview ? "Hide" : "Show"} Preview
               </Button>
-              <Button
-                onClick={handlePrint}
-                className="gap-2"
-              >
-                <Download className="w-4 h-4" />
-                Download PDF
-              </Button>
+              {/* REPLACED THE OLD PDF BUTTON WITH NEW DOWNLOAD BUTTON */}
+              <DownloadButton />
             </div>
           </div>
         </div>
@@ -109,7 +96,7 @@ const ResumeBuilder = () => {
                 <div className="bg-card rounded-lg border p-4">
                   <h2 className="text-lg font-semibold mb-4">Live Preview</h2>
                   <div className="bg-gray-100 rounded-lg flex justify-center p-4">
-                    <div ref={resumeRef} className="transform origin-top mx-auto" style={{ transform: 'scale(0.75)' }}>
+                    <div className="mx-auto" style={{ zoom: '0.75' }}>
                       <ResumePreview />
                     </div>
                   </div>
