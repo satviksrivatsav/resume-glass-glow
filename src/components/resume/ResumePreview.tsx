@@ -9,6 +9,11 @@ const fontSizeMap = {
   large: { base: '13pt', heading: '15pt', name: '26pt' },
 };
 
+const documentSizeMap = {
+  a4: { width: "210mm", height: "297mm" },
+  legal: { width: "8.5in", height: "14in" },
+};
+
 const IconWrapper = ({ children }: { children: React.ReactNode }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>{children}</div>
 );
@@ -183,8 +188,8 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
   const { personalInfo, education, workExperience, projects, skills, customSections, settings } = resumeData;
 
   const sizes = fontSizeMap[settings.fontSize];
-  const pageWidth = settings.documentSize === 'letter' ? '8.5in' : '210mm';
-  const pageHeight = settings.documentSize === 'letter' ? '11in' : '297mm';
+  const { width: pageWidth, height: pageHeight } =
+  documentSizeMap[settings.documentSize as keyof typeof documentSizeMap] || documentSizeMap.a4;
   const pageMargin = '0.5in';
 
   const formatDate = (dateStr: string) => {
@@ -212,9 +217,10 @@ export const ResumePreview = forwardRef<HTMLDivElement>((props, ref) => {
   return (
     <div
       ref={ref}
+      className="resume-preview-content" // ← ADDED THIS LINE
       style={{
         width: pageWidth,
-        height: pageHeight,
+        minHeight: pageHeight,
         overflow: 'hidden',
         fontFamily: settings.fontFamily,
         fontSize: sizes.base,

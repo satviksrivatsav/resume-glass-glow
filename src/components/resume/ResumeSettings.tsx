@@ -24,8 +24,8 @@ const FONT_SIZES = [
 ];
 
 const DOCUMENT_SIZES = [
-  { value: 'letter' as const, label: 'Letter', subtitle: '(US, Canada)' },
-  { value: 'a4' as const, label: 'A4', subtitle: '(other countries)' },
+  { value: "a4" as const, label: "A4", subtitle: "8.27 x 11.69 in" },
+  { value: "legal" as const, label: "Legal", subtitle: "8.5 x 14 in" },
 ];
 
 export const ResumeSettings = () => {
